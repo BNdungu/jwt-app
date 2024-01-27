@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken')
-const CustomAPIError = require('../errors/custom-error')
+const {UnauthenticatedError} = require('../errors')
 
 const authenticationMiddleware = (req,res,next) => {
     const authHeader = req.headers.authorisation
     if (!authHeader || !authHeader.startsWith("Bearer ")){
-        throw new CustomApiError('Invalid token', 401)
+        throw new UnauthenticatedError('Invalid token')
     }
 
     const token = authHeader.split(' ')[1]
@@ -15,7 +15,7 @@ const authenticationMiddleware = (req,res,next) => {
         req.user = username
         next()
     } catch (error) {
-        throw new CustomApiError('Not authorised to acces this route', 401)
+        throw new UnauthenticatedError('Not authorised to acces this route')
     }
 
    
